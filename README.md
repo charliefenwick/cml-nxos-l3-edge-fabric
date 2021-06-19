@@ -103,3 +103,4 @@ $
 
 - If you would like to utilize as a basic Python script, Jupyter can make that conversion for you by issuing `jupyter nbconvert --to python day0-nxos-l3-edge.ipynb` and cleaning up with a bit of editing.
 
+- If you are having trouble viewing the .ipynb file, try looking at via [online nbviewer](https://nbviewer.jupyter.org/github/charliefenwick/cml-nxos-l3-edge-fabric/blob/main/day0-nxos-l3-edge.ipynb).
