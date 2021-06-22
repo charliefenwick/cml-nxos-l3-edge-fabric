@@ -16,31 +16,54 @@ Finally, this is an adaptation of another CML lab that was originally built with
 
 Enjoy.
 
-## Requirements
+## Build Environment and Requirements
 
-- CML Version 2.2.1 build 36 server
+- Developed on macOS 11.4 (Big Sur)
+- Uses Python 3.9.1 and pip 21.0.1 included in macOS (in a virtualized environment)
+- Personally, I virtualize my environments with [Miniconda](https://docs.conda.io/en/latest/miniconda.html)... which worked fine with my typical 3.8.5 day-to-day environment.
+- Requires CML Version 2.2.1 build 36 server (or later)**\*\***
+- Rather resource intensive lab
+  - Developed on CML server utilizing 32 cores and 256GB of memory
+  - You likely need a minimum of 24 cores and 64GB of memory (mileage may vary, I have not tested to see what acceptable minimum that this can be run on)
 - Using stock NXOS, Ubuntu and IOSv CML node/image definitions
-- Python 3.8.10
-- From there, a minimum of the below needs to be installed:
+- A minimum of the below needs to be installed:
 ```
-$ pip install jupyter
-$ pip install ansible #if planning to use playbooks
-$ pip install passlib
-$ pip install ./virl2_client-2.2.1+build.36-py3-none-any.whl #downloaded from CML server
+$ pip3 install jupyter
+$ pip3 install ansible #if planning to use
+$ pip3 install passlib
+$ pip3 install virl2_client
 ```
 - See `requirements.txt` for specific module versions.
+
+>**\*\*Note:** Prior to CML 2.2.1, Ubuntu interfaces were labeled as enp0s2, enp0s3, enp0s4, etc.  In 2.2.1 and going forward they will be prefaced as in ens2, ens3, ens4, etc.  If you try to run this against earlier CML version, without making adjustments, your Jinja2 rendering of `cloud-init` will fail (at Python cell 35).  To further complicate matters, the node definitions for Ubuntu in CML 2.2.1 build 36, start with ens3, instead of ens2.  In my case, I have editted `/var/local/virl2/refplat/diff/node-definitions/ubuntu.yaml` to start with ens2 (which my understanding, will be the default, in subsequent releases).  Verify Ubuntu node definitions, how interfaces are labeled and the numbering they begin with.  You may have to make some minor adjustment to either CML's node definition or my code (replacing ens2, ens3 and ens4 with ens3, ens4 and ens5)
 
 ## Topology
 
 ![Topology](topology.png)
 
-## Implementation Details
+## Usage and Implementation Details
+
+- To make ready for use:
+```
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip3 install -r ./requirements.txt #or pip3 install what you plan to use
+$ jupyter notebook #navigate the browser window that opens
+```
+
+- If you prefer to run Jupyter a bit more quietly and in the background you could consider making some alias for `nohup jupyter notebook > /dev/null 2>&1 &`.
+
+- Jupyter is very intuitive and not that hard to pick up.  A quick search of the web will yield many tutorials, here is one such introduction on [Real Python's](https://realpython.com/jupyter-notebook-introduction/) website.
 
 - Looking through `day0-nxos-l3-edge.ipynb` near the top, pay close attention to the ALL CAPs variables.  They tend to be a single place to change a variable, that has ramification, further down.  In my environments I general deploy the external connector with a bridged configuration.  I also utilize DHCP and DNS on that Ethernet rail, that the gateway router picks up on.  Change `LAB_IP = 'dhcp'` to an IP address and netmask, if you need static definition.
+
+- You will need to make adjustments for your username and home directory.
 
 - `VIRL_SERVER` should be set to your CML hostname or IP address.
 
 - `JUMP_BOX` should be set to any intermediary jump box, otherwise `None`, if you are not situated as I am.
+
+- `DNS_NAMESERVER` will need to be identified.
 
 - Besides my own personal RSA keys, I have lab specific ones that I use.  You will need to make adjustments to fit your requirements and how you typically connect to machines.  I played with the idea of generating them keeping everything contained w/in the project director, but left it as is.  Later, I might update and change this (I welcome input on this or any other constructive criticism).
 
