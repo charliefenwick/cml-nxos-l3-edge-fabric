@@ -37,6 +37,9 @@ $ pip3 install virl2_client
 
 >**\*\*Note:** Prior to CML 2.2.1, Ubuntu interfaces were labeled as enp0s2, enp0s3, enp0s4, etc.  In 2.2.1 and going forward they will be prefaced as in ens2, ens3, ens4, etc.  If you try to run this against earlier CML version, without making adjustments, your Jinja2 rendering of `cloud-init` will fail (at Python cell 35).  To further complicate matters, the node definitions for Ubuntu in CML 2.2.1 build 36, start with ens3, instead of ens2.  In my case, I have editted `/var/local/virl2/refplat/diff/node-definitions/ubuntu.yaml` to start with ens2 (which my understanding, will be the default, in subsequent releases).  Verify Ubuntu node definitions, how interfaces are labeled and the numbering they begin with.  You may have to make some minor adjustment to either CML's node definition or my code (replacing ens2, ens3 and ens4 with ens3, ens4 and ens5)
 
+- Expanding on the above note, it is worth mentioning that this notebook does very little in the way of error checking and/or exception handling that would otherwise be seen in typical script development.  The cell-by-cell style or working within the context of a notebook, tends to relax such considerations.  Any such additions would grow the amount of code and in my opinion defeat some of the purpose of developing ideas w/in Jupyter.
+- Converting this to a Python script and putting into some form of service, I would strongly suggest considering the addition of appropriate error checking and exception handling.
+
 ## Topology
 
 ![Topology](topology.png)
